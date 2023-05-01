@@ -1,18 +1,13 @@
 package net.woek.Hat;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class Hat extends JavaPlugin{
 
@@ -107,21 +102,5 @@ public class Hat extends JavaPlugin{
         Permission itemPerm = new Permission("hat.items", PermissionDefault.FALSE); //^^
         itemPerm.addParent(basePerm, true);
         Bukkit.getPluginManager().addPermission(itemPerm);
-
-        Material[] materials = Material.values();
-
-        for(Material mat : materials){
-            //TODO: rename all references of .name() to .toString() if it seems like a good idea
-            Permission perm = new Permission("hat." + mat.name(), PermissionDefault.FALSE);
-
-            //Make these children of the appropriate permission
-            if(mat.isBlock()){
-                perm.addParent(blockPerm, true);
-            }else{
-                perm.addParent(itemPerm, true);
-            }
-
-            Bukkit.getPluginManager().addPermission(perm);
-        }
     }
 }
