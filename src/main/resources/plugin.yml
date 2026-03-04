@@ -2,6 +2,7 @@ name: Hat
 version: ${project.version}
 main: net.woek.Hat.Hat
 api-version: 1.13
+folia-supported: true
 commands:
   hat:
     description: Sets the currently held item as your hat.

@@ -1,5 +1,7 @@
 package net.woek.Hat;
 
+import com.tcoded.folialib.FoliaLib;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -9,7 +11,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 
+@Getter
 public class Hat extends JavaPlugin{
+
+    private FoliaLib foliaLib;
 
     //on enable
     @Override
@@ -32,6 +37,8 @@ public class Hat extends JavaPlugin{
         //if(config.getBoolean("manual_hat_equip.enabled")){
             this.getServer().getPluginManager().registerEvents(handler, this);
         //}
+
+        foliaLib = new FoliaLib(this);
 
         Bukkit.getConsoleSender().sendMessage("[Hat] Hat has been enabled.");
     }

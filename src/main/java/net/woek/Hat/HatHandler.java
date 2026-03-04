@@ -14,7 +14,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class HatHandler implements CommandExecutor, Listener {
 
@@ -73,39 +72,34 @@ public class HatHandler implements CommandExecutor, Listener {
                 event.getWhoClicked().getItemOnCursor().getType().getEquipmentSlot() != EquipmentSlot.HEAD /*&&
                 event.getWhoClicked().getInventory().getHelmet() == null*/){
 
-            Player player = (Player) event.getWhoClicked();
-            ItemStack cursorItem = player.getItemOnCursor(); //unknown if clone necessary
+            final Player player = (Player) event.getWhoClicked();
+            final ItemStack cursorItem = player.getItemOnCursor(); //unknown if clone necessary
 
-            ItemStack hatItem = player.getInventory().getHelmet(); //unknown if clone necessary
+            final ItemStack hatItem = player.getInventory().getHelmet(); //unknown if clone necessary
 
             if(checkValidHat(player, cursorItem)){
                 player.setItemOnCursor(null);
                 player.getInventory().setHelmet(null);
-                (new oneTickRunnable(player, cursorItem, hatItem)).runTaskLater(instance, 1L);
+
+                instance.getFoliaLib().getScheduler().runAtEntityLater(player, new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                }, 1L);
+
+                instance.getFoliaLib().getScheduler().runAtEntityLater(player, new Runnable() {
+                    @Override
+                    public void run() {
+                        player.setItemOnCursor(hatItem);
+                        player.getInventory().setHelmet(cursorItem);
+
+                        if (messagesEnabled) {
+                            player.sendMessage(setMessage);
+                        }
+                    }
+                }, 1L);
             }
-        }
-    }
-
-    //Delays hat placement by one tick (necessary for some reason)
-    class oneTickRunnable extends BukkitRunnable{
-
-        public oneTickRunnable(Player player, ItemStack cursorItem, ItemStack hatItem){
-            this.player = player;
-            this.cursorItem = cursorItem;
-
-            this.hatItem = hatItem;
-        }
-
-        private final Player player;
-        private final ItemStack cursorItem;
-
-        private final ItemStack hatItem;
-
-        @Override
-        public void run() {
-            player.setItemOnCursor(hatItem);
-            player.getInventory().setHelmet(cursorItem);
-            if(messagesEnabled){player.sendMessage(setMessage);}
         }
     }
 
